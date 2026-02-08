@@ -204,23 +204,70 @@ export default function App() {
       img.src = URL.createObjectURL(file);
 
       img.onload = () => {
-        const canvas = document.createElement("canvas");
         const size = 300;
-        canvas.width = shape === "rectangle" ? size * 1.4 : size;
-        canvas.height = size;
+        const canvas = document.createElement("canvas");
         const ctx = canvas.getContext("2d");
 
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ctx.beginPath();
-
-        if (shape === "circle") {
-          ctx.arc(canvas.width / 2, canvas.height / 2, size / 2, 0, Math.PI * 2);
+        // Set canvas size based on shape
+        if (shape === "rectangle") {
+          canvas.width = size * 1.4; // Width is 40% wider than height
+          canvas.height = size;
         } else {
-          ctx.rect(0, 0, canvas.width, canvas.height);
+          // Square or Circle
+          canvas.width = size;
+          canvas.height = size;
         }
 
-        ctx.clip();
-        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        // Clear canvas with transparent background
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        if (shape === "circle") {
+          // Create circular clipping path
+          ctx.beginPath();
+          ctx.arc(canvas.width / 2, canvas.height / 2, size / 2, 0, Math.PI * 2);
+          ctx.closePath();
+          ctx.clip();
+          
+          // Draw image
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        } else if (shape === "rectangle") {
+          // Draw rectangle with rounded corners
+          const cornerRadius = 20;
+          ctx.beginPath();
+          ctx.moveTo(cornerRadius, 0);
+          ctx.lineTo(canvas.width - cornerRadius, 0);
+          ctx.quadraticCurveTo(canvas.width, 0, canvas.width, cornerRadius);
+          ctx.lineTo(canvas.width, canvas.height - cornerRadius);
+          ctx.quadraticCurveTo(canvas.width, canvas.height, canvas.width - cornerRadius, canvas.height);
+          ctx.lineTo(cornerRadius, canvas.height);
+          ctx.quadraticCurveTo(0, canvas.height, 0, canvas.height - cornerRadius);
+          ctx.lineTo(0, cornerRadius);
+          ctx.quadraticCurveTo(0, 0, cornerRadius, 0);
+          ctx.closePath();
+          ctx.clip();
+          
+          // Draw image
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        } else {
+          // Square with rounded corners
+          const cornerRadius = 20;
+          ctx.beginPath();
+          ctx.moveTo(cornerRadius, 0);
+          ctx.lineTo(canvas.width - cornerRadius, 0);
+          ctx.quadraticCurveTo(canvas.width, 0, canvas.width, cornerRadius);
+          ctx.lineTo(canvas.width, canvas.height - cornerRadius);
+          ctx.quadraticCurveTo(canvas.width, canvas.height, canvas.width - cornerRadius, canvas.height);
+          ctx.lineTo(cornerRadius, canvas.height);
+          ctx.quadraticCurveTo(0, canvas.height, 0, canvas.height - cornerRadius);
+          ctx.lineTo(0, cornerRadius);
+          ctx.quadraticCurveTo(0, 0, cornerRadius, 0);
+          ctx.closePath();
+          ctx.clip();
+          
+          // Draw image
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        }
+
         resolve(canvas.toDataURL("image/png"));
       };
     });
@@ -278,13 +325,13 @@ export default function App() {
               className="flex items-center gap-3 no-underline hover:opacity-90 transition-opacity"
               title="SB Jain's QR Generator"
             >
-    <div className="w-12 h-12 md:w-16 md:h-16">
-      <img 
-        src="/Logo.png" 
-        alt="SB Jain's Logo" 
-        className="w-full h-full object-contain"
-      />
-    </div>
+              <div className="w-12 h-12 md:w-16 md:h-16">
+                <img 
+                  src="/Logo.png" 
+                  alt="SB Jain's Logo" 
+                  className="w-full h-full object-contain"
+                />
+              </div>
               <div>
                 <h1 className="text-2xl md:text-3xl font-bold text-blue-900">
                   SB Jain's
@@ -645,13 +692,13 @@ export default function App() {
                 href="/" 
                 className="flex items-center gap-2 no-underline hover:opacity-80 transition-opacity"
               >
-    <div className="w-8 h-8">
-      <img 
-        src="/Logo.png" 
-        alt="SB Jain's Logo" 
-        className="w-full h-full object-contain"
-      />
-    </div>
+                <div className="w-8 h-8">
+                  <img 
+                    src="/Logo.png" 
+                    alt="SB Jain's Logo" 
+                    className="w-full h-full object-contain"
+                  />
+                </div>
                 <div>
                   <p className="text-sm font-bold text-blue-900">SB Jain's QR Generator</p>
                   <p className="text-xs text-gray-600">Professional QR Code Creation</p>
